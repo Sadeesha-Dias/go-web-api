@@ -23,9 +23,25 @@ func getBooks(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, books)
 }
 
+func addBooks(p *gin.Context) {
+	var newBook book
+	if err := p.BindJSON(&newBook); err != nil {
+		return
+	}
+
+	books = append(books, newBook)
+	p.IndentedJSON(http.StatusCreated, newBook)
+}
+
 func main() {
 	router := gin.Default()
+
+	//GET
 	router.GET("/books", getBooks)
+
+	//POST
+	router.POST("/addbooks", addBooks)
+
 	err := router.Run("localhost:8080")
 	if err != nil {
 		return
